@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Work | Veloce Studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Helvetica Neue, Helvetica, Arial, sans-serif' font-size='36' font-weight='700' fill='%23f0f0f0'%3EV%3C/text%3E%3C/svg%3E" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --black: #0a0a0a;
+      --dark: #111111;
+      --border: #242424;
+      --white: #f0f0f0;
+      --silver: #9a9a9a;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 48px;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; flex-direction: column; text-decoration: none; }
+    .nav-logo .v { font-size: 18px; font-weight: 700; letter-spacing: 4px; color: var(--white); }
+    .nav-logo .s { font-size: 10px; font-weight: 400; letter-spacing: 6px; color: var(--silver); margin-top: 2px; }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--silver);
+      font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-cta {
+      background: var(--white); color: var(--black);
+      padding: 10px 24px; border-radius: 2px;
+      text-decoration: none; font-size: 11px;
+      font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+      transition: background 0.3s;
+    }
+    .nav-cta:hover { background: var(--silver); }
+
+    /* HERO */
+    .page-hero {
+      padding: 160px 48px 80px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-hero .tag {
+      font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--silver); margin-bottom: 20px;
+    }
+    .page-hero h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700; letter-spacing: -2px;
+      margin-bottom: 16px;
+    }
+    .page-hero p {
+      color: var(--silver); font-size: 16px; max-width: 480px; margin: 0 auto;
+    }
+    .ig-follow {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 32px;
+      text-decoration: none;
+      color: var(--silver);
+      font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 10px 20px; border-radius: 2px;
+      transition: color 0.3s, border-color 0.3s;
+    }
+    .ig-follow:hover { color: var(--white); border-color: var(--silver); }
+    .ig-follow svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* GRID */
+    .work-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 48px 120px;
+    }
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 40px;
+      justify-items: center;
+    }
+    .work-grid .instagram-media {
+      min-width: 0 !important;
+      width: 100% !important;
+      max-width: 400px !important;
+      border-radius: 8px !important;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--silver);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      .page-hero { padding: 120px 24px 60px; }
+      .work-section { padding: 60px 24px 80px; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="v">VELOCE</span>
+      <span class="s">STUDIO</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#why-section">Why Us</a></li>
+      <li><a href="work.html" class="active">Our Work</a></li>
+      <li><a href="index.html#quote">Quote</a></li>
+    </ul>
+    <a href="book.html" class="nav-cta">Book Appointment</a>
+  </nav>
+
+  <div class="page-hero">
+    <p class="tag">Portfolio</p>
+    <h1>Our Work</h1>
+    <p>A look at some of the builds we've completed — window tint, PPF, vinyl wraps, and more.</p>
+    <a href="https://www.instagram.com/velocestudiotx/" target="_blank" class="ig-follow">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      Follow @velocestudiotx
+    </a>
+  </div>
+
+  <div class="work-section">
+    <div class="work-grid">
+
+      <blockquote class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/p/DYEDeFSjSx4/"
+        data-instgrm-version="14"
+        style="background:#111; border:1px solid #242424; border-radius:8px; padding:0; width:100%; max-width:400px;">
+      </blockquote>
+
+      <blockquote class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/p/DXhv983lOor/"
+        data-instgrm-version="14"
+        style="background:#111; border:1px solid #242424; border-radius:8px; padding:0; width:100%; max-width:400px;">
+      </blockquote>
+
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 Veloce Studio. All rights reserved.</span>
+    <span>San Antonio, TX</span>
+  </footer>
+
+  <script async src="//www.instagram.com/embed.js"></script>
+
+</body>
+</html>
