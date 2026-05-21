@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Veloce Studio | San Antonio, TX</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Helvetica Neue, Helvetica, Arial, sans-serif' font-size='36' font-weight='700' fill='%23f0f0f0'%3EV%3C/text%3E%3C/svg%3E" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #111111;
+      --card: #161616;
+      --border: #242424;
+      --white: #f0f0f0;
+      --silver: #9a9a9a;
+      --accent: #c8c8c8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-logo .v { font-size: 18px; font-weight: 700; letter-spacing: 4px; color: var(--white); }
+    .nav-logo .s { font-size: 10px; font-weight: 400; letter-spacing: 6px; color: var(--silver); margin-top: 2px; }
+
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      color: var(--silver);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: var(--white);
+      color: var(--black);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .nav-cta:hover { background: var(--silver); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(200,200,200,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 32px;
+      border: 1px solid var(--border);
+      padding: 8px 20px;
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-size: clamp(56px, 10vw, 120px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 0.95;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(20px, 3vw, 32px);
+      font-weight: 300;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 48px;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--silver);
+      max-width: 480px;
+      line-height: 1.8;
+      margin-bottom: 56px;
+    }
+
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--black);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      transition: background 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: var(--silver);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      transition: border-color 0.3s, color 0.3s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--silver); color: var(--white); transform: translateY(-1px); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--border);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--silver));
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 120px 60px; }
+
+    .section-tag {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .section-desc {
+      font-size: 15px;
+      color: var(--silver);
+      max-width: 500px;
+      line-height: 1.8;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      margin: 0 auto 80px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--dark); }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: var(--card);
+      padding: 60px 48px;
+      border: 1px solid var(--border);
+      transition: border-color 0.3s, background 0.3s;
+      cursor: default;
+    }
+
+    .service-card:hover {
+      border-color: var(--silver);
+      background: #1a1a1a;
+    }
+
+    .service-icon {
+      font-size: 32px;
+      margin-bottom: 32px;
+      display: block;
+    }
+
+    .service-num {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--silver);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .service-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .service-desc {
+      font-size: 14px;
+      color: var(--silver);
+      line-height: 1.8;
+      margin-bottom: 32px;
+    }
+
+    .service-features {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+
+    .service-features li {
+      font-size: 12px;
+      color: var(--silver);
+      letter-spacing: 1px;
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .service-features li::before {
+      content: '—';
+      color: var(--border);
+    }
+
+    /* ── WHY US ── */
+    #why-section {
+      background: var(--black);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .why-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .stat-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px 32px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--white);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-top: 8px;
+      display: block;
+    }
+
+    .why-list {
+      list-style: none;
+      margin-top: 40px;
+    }
+
+    .why-list li {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .why-list li:last-child { border-bottom: none; }
+
+    .why-check {
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--silver);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 10px;
+      color: var(--silver);
+      margin-top: 2px;
+    }
+
+    .why-text strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .why-text span {
+      font-size: 13px;
+      color: var(--silver);
+    }
+
+    /* ── QUOTE FORM ── */
+    #quote { background: var(--dark); }
+
+    .quote-container {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .quote-form {
+      margin-top: 64px;
+      text-align: left;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+
+    input, select, textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 16px 20px;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder, textarea::placeholder { color: #444; }
+    input:focus, select:focus, textarea:focus { border-color: var(--silver); }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239a9a9a' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    select option { background: var(--card); color: var(--white); }
+    textarea { resize: vertical; min-height: 120px; }
+
+    .form-submit { margin-top: 32px; text-align: center; }
+
+    .submit-btn {
+      background: var(--white);
+      color: var(--black);
+      border: none;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 20px 56px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      width: 100%;
+    }
+    .submit-btn:hover { background: var(--accent); transform: translateY(-1px); }
+
+    .form-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--silver);
+      margin-top: 16px;
+      letter-spacing: 1px;
+    }
+
+    .success-msg {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 48px;
+      text-align: center;
+      margin-top: 32px;
+    }
+    .success-msg.show { display: block; }
+    .success-msg h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .success-msg p { font-size: 14px; color: var(--silver); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+
+    .footer-logo .v { font-size: 20px; font-weight: 700; letter-spacing: 4px; color: var(--white); display: block; }
+    .footer-logo .s { font-size: 10px; letter-spacing: 6px; color: var(--silver); margin-top: 3px; display: block; }
+
+    .footer-info p { font-size: 12px; color: var(--silver); letter-spacing: 1px; line-height: 2; text-align: center; }
+
+    .footer-links { display: flex; gap: 32px; }
+    .footer-links a {
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--silver); text-decoration: none; transition: color 0.3s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 24px 60px;
+      text-align: center;
+    }
+    .footer-bottom p { font-size: 11px; color: #444; letter-spacing: 1px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+      section { padding: 80px 24px; }
+      .why-grid { grid-template-columns: 1fr; gap: 48px; }
+      footer { padding: 40px 24px; flex-direction: column; text-align: center; }
+      .footer-bottom { padding: 20px 24px; }
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .hero-btns { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <span class="v">VELOCE</span>
+      <span class="s">STUDIO</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#why-section">Why Us</a></li>
+      <li><a href="book.html">Book</a></li>
+      <li><a href="#quote">Contact</a></li>
+    </ul>
+    <a href="book.html" class="nav-cta">Book Appointment</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <span class="hero-tag">San Antonio, Texas</span>
+    <h1 class="hero-title">VELOCE</h1>
+    <p class="hero-subtitle">Studio</p>
+    <p class="hero-desc">
+      Premium window tint, paint protection film, and vinyl wraps —
+      precision-installed in San Antonio. Built for those who take their vehicle seriously.
+    </p>
+    <div class="hero-btns">
+      <a href="book.html" class="btn-primary">Book an Appointment</a>
+      <a href="#quote" class="btn-secondary">Request a Quote</a>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="services-header">
+      <p class="section-tag">What We Offer</p>
+      <h2 class="section-title">Our Services</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">◈</span>
+        <span class="service-num">01</span>
+        <h3 class="service-name">Window Tint</h3>
+        <p class="service-desc">Block heat, UV rays, and glare while enhancing privacy and style. We use top-tier films to keep your interior cool and protected.</p>
+        <ul class="service-features">
+          <li>Ceramic heat-rejection film</li>
+          <li>UV & infrared blocking</li>
+          <li>All vehicle types</li>
+          <li>Lifetime warranty available</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">◉</span>
+        <span class="service-num">02</span>
+        <h3 class="service-name">Paint Protection Film</h3>
+        <p class="service-desc">Invisible armor for your paint. Our PPF guards against rock chips, scratches, road debris, and environmental contaminants.</p>
+        <ul class="service-features">
+          <li>Self-healing film technology</li>
+          <li>Full front, partial, or full body</li>
+          <li>High-gloss or matte finish</li>
+          <li>Multi-year warranty</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">◇</span>
+        <span class="service-num">03</span>
+        <h3 class="service-name">Vinyl Wraps</h3>
+        <p class="service-desc">Transform your vehicle's look without a permanent paint job. Hundreds of colors and finishes available — fully reversible.</p>
+        <ul class="service-features">
+          <li>Full & partial wraps</li>
+          <li>Gloss, matte, satin, chrome</li>
+          <li>Color change or custom design</li>
+          <li>Paint-safe removal</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section id="why-section">
+    <div class="why-grid">
+      <div>
+        <p class="section-tag">Why Veloce Studio</p>
+        <h2 class="section-title">Precision in<br/>Every Detail</h2>
+        <p class="section-desc">We treat every vehicle like our own. No shortcuts, no cutting corners — just clean, professional installs backed by premium materials.</p>
+        <ul class="why-list">
+          <li>
+            <div class="why-check">✓</div>
+            <div class="why-text">
+              <strong>Premium Materials Only</strong>
+              <span>We source top-grade films and wrap vinyl from trusted manufacturers.</span>
+            </div>
+          </li>
+          <li>
+            <div class="why-check">✓</div>
+            <div class="why-text">
+              <strong>Detail-Obsessed Installs</strong>
+              <span>Every edge, every corner — installed with precision and care.</span>
+            </div>
+          </li>
+          <li>
+            <div class="why-check">✓</div>
+            <div class="why-text">
+              <strong>Local San Antonio Experts</strong>
+              <span>We know the Texas heat and build solutions to handle it.</span>
+            </div>
+          </li>
+          <li>
+            <div class="why-check">✓</div>
+            <div class="why-text">
+              <strong>Transparent Quotes</strong>
+              <span>No hidden fees. You get a clear, honest price before we start.</span>
+            </div>
+          </li>
+        </ul>
+        <div style="margin-top:40px; border-top: 1px solid var(--border); padding-top: 32px; display:flex; flex-direction:column; gap:12px;">
+          <p style="font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--silver);">Get In Touch</p>
+          <a href="mailto:info@veloce-studio.com" style="color:var(--white); text-decoration:none; font-size:16px; font-weight:600; letter-spacing:-0.3px; transition: color 0.3s;" onmouseover="this.style.color='var(--silver)'" onmouseout="this.style.color='var(--white)'">info@veloce-studio.com</a>
+          <p style="font-size:13px; color:var(--silver);">San Antonio, Texas · By appointment</p>
+        </div>
+      </div>
+      <div class="why-stats">
+        <div class="stat-box">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Satisfaction Focus</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Core Services</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">SA</span>
+          <span class="stat-label">San Antonio, TX</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Attention to Detail</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE FORM -->
+  <section id="quote">
+    <div class="quote-container">
+      <p class="section-tag">Get Started</p>
+      <h2 class="section-title">Request a Quote</h2>
+      <p class="section-desc" style="margin: 0 auto; text-align:center;">Fill out the form below and we'll get back to you with a custom quote. No pressure, no commitment.</p>
+
+      <form class="quote-form" id="quoteForm" name="quote-request" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+        <input type="hidden" name="form-name" value="quote-request" />
+        <p style="display:none;"><input name="bot-field" /></p>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" name="first-name" placeholder="First name" required />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" name="last-name" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="(210) 000-0000" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="service">Service Interested In</label>
+            <select id="service" name="service" required>
+              <option value="" disabled selected>Select a service</option>
+              <option value="window-tint">Window Tint</option>
+              <option value="ppf">Paint Protection Film (PPF)</option>
+              <option value="vinyl-wrap">Vinyl Wrap</option>
+              <option value="multiple">Multiple Services</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="vehicle">Vehicle (Year, Make, Model)</label>
+            <input type="text" id="vehicle" name="vehicle" placeholder="Year, Make, Model" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Additional Details</label>
+          <textarea id="message" name="message" placeholder="Tell us more about what you're looking for — preferred coverage, any specific concerns, etc."></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="submit-btn">Submit Quote Request</button>
+          <p class="form-note">We typically respond within 24 hours.</p>
+        </div>
+      </form>
+
+      <div class="success-msg" id="successMsg">
+        <h3>Quote Request Received</h3>
+        <p>Thanks for reaching out. We'll review your details and get back to you within 24 hours.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      <span class="v">VELOCE</span>
+      <span class="s">STUDIO</span>
+    </div>
+    <div class="footer-info">
+      <p>San Antonio, Texas</p>
+      <p>Window Tint · PPF · Vinyl Wraps</p>
+      <p>info@veloce-studio.com</p>
+    </div>
+    <div class="footer-links">
+      <a href="#services">Services</a>
+      <a href="#quote">Quote</a>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <p>© 2026 Veloce Studio. All rights reserved. San Antonio, TX.</p>
+  </div>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = document.getElementById('quoteForm');
+      const success = document.getElementById('successMsg');
+      const data = new FormData(form);
+      fetch('/', { method: 'POST', body: data })
+        .catch(() => {});
+      form.style.display = 'none';
+      success.classList.add('show');
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.style.opacity = '1';
+          el.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.service-card, .stat-box, .why-list li').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book an Appointment | Veloce Studio</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230a0a0a'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Helvetica Neue, Helvetica, Arial, sans-serif' font-size='36' font-weight='700' fill='%23f0f0f0'%3EV%3C/text%3E%3C/svg%3E" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #111111;
+      --card: #161616;
+      --border: #242424;
+      --white: #f0f0f0;
+      --silver: #9a9a9a;
+      --accent: #c8c8c8;
+      --available: #f0f0f0;
+      --unavailable: #1a1a1a;
+      --selected: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 60px;
+      background: rgba(10,10,10,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      text-decoration: none;
+    }
+    .nav-logo .v { font-size: 18px; font-weight: 700; letter-spacing: 4px; color: var(--white); }
+    .nav-logo .s { font-size: 10px; letter-spacing: 6px; color: var(--silver); margin-top: 2px; }
+
+    .nav-back {
+      color: var(--silver);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-back:hover { color: var(--white); }
+
+    .nav-cta {
+      background: var(--white);
+      color: var(--black);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      transition: background 0.3s;
+    }
+    .nav-cta:hover { background: var(--accent); }
+
+    /* ── MAIN ── */
+    main {
+      padding: 140px 60px 80px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .page-header {
+      margin-bottom: 64px;
+    }
+
+    .page-tag {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .page-title {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .page-desc {
+      font-size: 15px;
+      color: var(--silver);
+      max-width: 440px;
+      line-height: 1.8;
+    }
+
+    /* ── LAYOUT ── */
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    /* ── CALENDAR ── */
+    .calendar-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .cal-month {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .cal-nav {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cal-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--silver);
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .cal-btn:hover { border-color: var(--silver); color: var(--white); }
+
+    .cal-days-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      margin-bottom: 8px;
+    }
+
+    .cal-day-label {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--silver);
+      padding: 8px 0;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: default;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .cal-day.empty { background: transparent; }
+
+    .cal-day.past {
+      color: #333;
+      cursor: not-allowed;
+    }
+
+    .cal-day.unavailable {
+      color: #444;
+      background: var(--unavailable);
+      cursor: not-allowed;
+    }
+
+    .cal-day.unavailable::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 1px;
+      background: #333;
+      transform: rotate(-45deg);
+    }
+
+    .cal-day.available {
+      color: var(--white);
+      background: transparent;
+      border-color: var(--border);
+      cursor: pointer;
+    }
+
+    .cal-day.available:hover {
+      background: #1e1e1e;
+      border-color: var(--silver);
+    }
+
+    .cal-day.selected {
+      background: var(--white) !important;
+      color: var(--black) !important;
+      border-color: var(--white) !important;
+      font-weight: 700;
+    }
+
+    .cal-day.today {
+      border-color: var(--silver);
+    }
+
+    /* ── LEGEND ── */
+    .cal-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--silver);
+      letter-spacing: 1px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .legend-dot.available { border-color: var(--silver); background: transparent; }
+    .legend-dot.unavailable { background: var(--unavailable); border-color: #333; }
+    .legend-dot.selected { background: var(--white); border-color: var(--white); }
+
+    /* ── FORM ── */
+    .booking-form-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .selected-date-display {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px 32px;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .selected-date-display .date-icon {
+      font-size: 20px;
+      color: var(--silver);
+    }
+
+    .selected-date-display .date-text {
+      font-size: 14px;
+      color: var(--silver);
+    }
+
+    .selected-date-display .date-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      display: block;
+    }
+
+    .booking-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 40px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--silver);
+    }
+
+    input, select, textarea {
+      background: var(--black);
+      border: 1px solid var(--border);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 14px;
+      padding: 14px 18px;
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder, textarea::placeholder { color: #444; }
+    input:focus, select:focus, textarea:focus { border-color: var(--silver); }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%239a9a9a' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    select option { background: var(--card); }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .submit-btn {
+      background: var(--white);
+      color: var(--black);
+      border: none;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 18px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .submit-btn:hover { background: var(--accent); transform: translateY(-1px); }
+    .submit-btn:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; }
+
+    .form-note {
+      font-size: 11px;
+      color: var(--silver);
+      text-align: center;
+      margin-top: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* ── SUCCESS ── */
+    .success-msg {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 48px;
+      text-align: center;
+    }
+    .success-msg.show { display: block; }
+    .success-msg h3 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+    .success-msg p { font-size: 14px; color: var(--silver); line-height: 1.8; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 80px;
+    }
+
+    .footer-logo .v { font-size: 18px; font-weight: 700; letter-spacing: 4px; color: var(--white); display: block; }
+    .footer-logo .s { font-size: 10px; letter-spacing: 6px; color: var(--silver); margin-top: 2px; display: block; }
+
+    footer p { font-size: 11px; color: #444; letter-spacing: 1px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      main { padding: 100px 24px 60px; }
+      .booking-layout { grid-template-columns: 1fr; }
+      footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 500px) {
+      .form-row { grid-template-columns: 1fr; }
+      .calendar-wrap { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="v">VELOCE</span>
+      <span class="s">STUDIO</span>
+    </a>
+    <a href="index.html" class="nav-back">← Back to Home</a>
+    <a href="index.html#quote" class="nav-cta">Get a Quote</a>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <span class="page-tag">Schedule Your Visit</span>
+      <h1 class="page-title">Book an<br/>Appointment</h1>
+      <p class="page-desc">Select an available date below and fill out your details. We'll confirm your appointment within 24 hours.</p>
+      <div style="display:inline-flex; align-items:center; gap:12px; margin-top:24px; border: 1px solid var(--border); padding: 16px 24px; background: var(--card);">
+        <span style="color:var(--silver); font-size:16px;">◈</span>
+        <p style="font-size:12px; letter-spacing:1px; color:var(--silver);"><strong style="color:var(--white); letter-spacing:2px; text-transform:uppercase; font-size:11px;">Deposit Required</strong><br/>A deposit is required to secure your appointment. We'll send payment details upon confirmation.</p>
+      </div>
+    </div>
+
+    <div class="booking-layout">
+
+      <!-- CALENDAR -->
+      <div class="calendar-wrap">
+        <div class="cal-header">
+          <span class="cal-month" id="calMonth">Loading...</span>
+          <div class="cal-nav">
+            <button class="cal-btn" id="prevBtn">&#8592;</button>
+            <button class="cal-btn" id="nextBtn">&#8594;</button>
+          </div>
+        </div>
+        <div class="cal-days-header">
+          <div class="cal-day-label">Su</div>
+          <div class="cal-day-label">Mo</div>
+          <div class="cal-day-label">Tu</div>
+          <div class="cal-day-label">We</div>
+          <div class="cal-day-label">Th</div>
+          <div class="cal-day-label">Fr</div>
+          <div class="cal-day-label">Sa</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend">
+          <div class="legend-item"><div class="legend-dot available"></div> Available</div>
+          <div class="legend-item"><div class="legend-dot unavailable"></div> Unavailable</div>
+          <div class="legend-item"><div class="legend-dot selected"></div> Selected</div>
+        </div>
+      </div>
+
+      <!-- BOOKING FORM -->
+      <div class="booking-form-wrap">
+        <div class="selected-date-display" id="dateDisplay">
+          <span class="date-icon">◈</span>
+          <div>
+            <span class="date-text">Selected date</span>
+            <span class="date-value" id="dateValue">— Select a date from the calendar</span>
+          </div>
+        </div>
+
+        <form class="booking-form" id="bookingForm" name="appointment-booking" method="POST" data-netlify="true" onsubmit="handleBookingSubmit(event)">
+          <input type="hidden" name="form-name" value="appointment-booking" />
+          <input type="hidden" name="selected-date" id="selectedDateInput" value="" />
+          <p style="display:none;"><input name="bot-field" /></p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bFirstName">First Name</label>
+              <input type="text" id="bFirstName" name="first-name" placeholder="First name" required />
+            </div>
+            <div class="form-group">
+              <label for="bLastName">Last Name</label>
+              <input type="text" id="bLastName" name="last-name" placeholder="Last name" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="bEmail">Email Address</label>
+            <input type="email" id="bEmail" name="email" placeholder="your@email.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="bPhone">Phone Number</label>
+            <input type="tel" id="bPhone" name="phone" placeholder="(210) 000-0000" />
+          </div>
+
+          <div class="form-group">
+            <label for="bService">Service</label>
+            <select id="bService" name="service" required>
+              <option value="" disabled selected>Select a service</option>
+              <option value="window-tint">Window Tint</option>
+              <option value="ppf">Paint Protection Film (PPF)</option>
+              <option value="vinyl-wrap">Vinyl Wrap</option>
+              <option value="multiple">Multiple Services</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="bVehicle">Vehicle (Year, Make, Model)</label>
+            <input type="text" id="bVehicle" name="vehicle" placeholder="Year, Make, Model" />
+          </div>
+
+          <div class="form-group">
+            <label for="bNotes">Additional Notes</label>
+            <textarea id="bNotes" name="notes" placeholder="Any details about your vehicle or service needs..."></textarea>
+          </div>
+
+          <div style="background:#0f0f0f; border: 1px solid var(--border); padding: 14px 18px; margin-bottom: 8px; display:flex; align-items:center; gap:10px;">
+            <span style="color:var(--silver); font-size:13px;">⚠</span>
+            <p style="font-size:11px; color:var(--silver); letter-spacing:1px;"><strong style="color:var(--white);">Deposit required</strong> — A deposit must be paid to save your spot. Details sent upon confirmation.</p>
+          </div>
+          <button type="submit" class="submit-btn" id="submitBtn" disabled>Select a Date to Continue</button>
+          <p class="form-note">We'll confirm your appointment within 24 hours.</p>
+        </form>
+
+        <div class="success-msg" id="successMsg">
+          <h3>Appointment Requested</h3>
+          <p>We received your booking request and will confirm your appointment within 24 hours at the email you provided.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-logo">
+      <span class="v">VELOCE</span>
+      <span class="s">STUDIO</span>
+    </div>
+    <p>© 2026 Veloce Studio · San Antonio, TX</p>
+  </footer>
+
+  <script>
+    // ============================================================
+    // AVAILABILITY SETTINGS
+    // ============================================================
+
+    // CLOSED DAYS OF THE WEEK (0=Sunday, 1=Monday, ... 6=Saturday)
+    // All days open — managed via Google Sheet
+    const CLOSED_WEEKDAYS = [];
+
+    // Specific dates forced open even if normally closed
+    const SPECIAL_OPEN_DATES = [];
+
+    // YOUR GOOGLE SHEET CSV URL — paste it here after publishing
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqvtf9hSKtWrGU4WIK1R3qMXDy6gorHccwDQru33kVxigKO_a7jrHFKr9VTO5cLMKG404H0iqlSbtK/pub?output=csv";
+
+    // Dates loaded from Google Sheet (auto-populated)
+    let UNAVAILABLE_DATES = [];
+
+    // ============================================================
+    // GOOGLE SHEET LOADER
+    // ============================================================
+
+    async function loadUnavailableDates() {
+      if (!SHEET_CSV_URL) {
+        renderCalendar();
+        return;
+      }
+      try {
+        const res = await fetch(SHEET_CSV_URL);
+        const text = await res.text();
+        const rows = text.trim().split('\n').slice(1); // skip header
+        UNAVAILABLE_DATES = rows
+          .map(row => {
+            const [date, status] = row.split(',').map(s => s.trim().replace(/"/g, ''));
+            const s = status ? status.toLowerCase() : '';
+            return (s === 'booked' || s === 'unavailable') ? date : null;
+          })
+          .filter(Boolean);
+      } catch (e) {
+        console.log('Could not load sheet, using defaults');
+      }
+      renderCalendar();
+    }
+
+    // ============================================================
+    // CALENDAR LOGIC — DO NOT EDIT BELOW
+    // ============================================================
+
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let currentMonth = currentDate.getMonth();
+    let selectedDate = null;
+
+    const monthNames = ["January","February","March","April","May","June",
+                        "July","August","September","October","November","December"];
+
+    function formatDate(year, month, day) {
+      return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    }
+
+    function formatDisplayDate(dateStr) {
+      const [y, m, d] = dateStr.split('-');
+      const date = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+      return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function isAvailable(year, month, day) {
+      const dateStr = formatDate(year, month, day);
+      if (SPECIAL_OPEN_DATES.includes(dateStr)) return true;
+      if (UNAVAILABLE_DATES.includes(dateStr)) return false;
+      const d = new Date(year, month, day);
+      if (CLOSED_WEEKDAYS.includes(d.getDay())) return false;
+      return true;
+    }
+
+    function isPast(year, month, day) {
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      const d = new Date(year, month, day);
+      return d < today;
+    }
+
+    function isToday(year, month, day) {
+      const today = new Date();
+      return today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+    }
+
+    function renderCalendar() {
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const grid = document.getElementById('calGrid');
+      const monthLabel = document.getElementById('calMonth');
+
+      monthLabel.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+      grid.innerHTML = '';
+
+      // Empty cells before first day
+      for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'cal-day empty';
+        grid.appendChild(empty);
+      }
+
+      // Days
+      for (let day = 1; day <= daysInMonth; day++) {
+        const cell = document.createElement('div');
+        cell.textContent = day;
+        cell.className = 'cal-day';
+        const dateStr = formatDate(currentYear, currentMonth, day);
+
+        if (isPast(currentYear, currentMonth, day)) {
+          cell.classList.add('past');
+        } else if (!isAvailable(currentYear, currentMonth, day)) {
+          cell.classList.add('unavailable');
+        } else {
+          cell.classList.add('available');
+          cell.addEventListener('click', () => selectDate(dateStr, cell));
+        }
+
+        if (isToday(currentYear, currentMonth, day)) {
+          cell.classList.add('today');
+        }
+
+        if (selectedDate === dateStr) {
+          cell.classList.add('selected');
+        }
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function selectDate(dateStr, cell) {
+      selectedDate = dateStr;
+      document.getElementById('selectedDateInput').value = dateStr;
+      document.getElementById('dateValue').textContent = formatDisplayDate(dateStr);
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').textContent = 'Request This Appointment';
+      renderCalendar();
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      renderCalendar();
+    });
+
+    loadUnavailableDates();
+
+    function handleBookingSubmit(e) {
+      e.preventDefault();
+      if (!selectedDate) return;
+      const form = document.getElementById('bookingForm');
+      const success = document.getElementById('successMsg');
+      const data = new FormData(form);
+      fetch('/', { method: 'POST', body: data }).catch(() => {});
+      form.style.display = 'none';
+      success.classList.add('show');
+    }
+
+    renderCalendar();
+  </script>
+
+</body>
+</html>
