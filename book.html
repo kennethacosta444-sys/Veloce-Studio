@@ -569,8 +569,11 @@
     // YOUR GOOGLE SHEET CSV URL — paste it here after publishing
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTqvtf9hSKtWrGU4WIK1R3qMXDy6gorHccwDQru33kVxigKO_a7jrHFKr9VTO5cLMKG404H0iqlSbtK/pub?output=csv";
 
+    // Manually blocked dates (set by Kenneth via Claude)
+    const MANUALLY_BLOCKED = ["2026-05-22","2026-05-23","2026-05-24"];
+
     // Dates loaded from Google Sheet (auto-populated)
-    let UNAVAILABLE_DATES = [];
+    let UNAVAILABLE_DATES = [...MANUALLY_BLOCKED];
 
     // ============================================================
     // GOOGLE SHEET LOADER
@@ -585,13 +588,14 @@
         const res = await fetch(SHEET_CSV_URL);
         const text = await res.text();
         const rows = text.trim().split('\n').slice(1); // skip header
-        UNAVAILABLE_DATES = rows
+        const sheetDates = rows
           .map(row => {
             const [date, status] = row.split(',').map(s => s.trim().replace(/"/g, ''));
             const s = status ? status.toLowerCase() : '';
             return (s === 'booked' || s === 'unavailable') ? date : null;
           })
           .filter(Boolean);
+        UNAVAILABLE_DATES = [...new Set([...MANUALLY_BLOCKED, ...sheetDates])];
       } catch (e) {
         console.log('Could not load sheet, using defaults');
       }
